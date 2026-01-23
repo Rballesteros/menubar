@@ -2,15 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [9.5.3](https://github.com/Rballesteros/menubar/compare/v9.5.2...v9.5.3) (2025-12-10)
+### [9.5.3](https://github.com/Rballesteros/menubar-enhanced) (2026-01-12)
 
-### Features
+### Bug Fixes
 
-* **electron**: Add support for Electron 39.x ([feature/electron-update](https://github.com/Rballesteros/menubar/tree/feature/electron-update))
-  - Updated devDependencies to use Electron 39.2.6
-  - Extended peerDependencies range to support Electron versions up to 40.0.0
-  - Updated compatibility documentation in README
-  - Maintains backward compatibility with Electron 9.x and above
+* use clearTimeout instead of clearInterval for blur timeout ([ef46725](https://github.com/Rballesteros/menubar-enhanced/commit/ef46725))
+* properly reset state in windowClear and clicked methods ([8f4f2c2](https://github.com/Rballesteros/menubar-enhanced/commit/8f4f2c2))
+* prevent multiple blur timeouts from being created ([e37b6ba](https://github.com/Rballesteros/menubar-enhanced/commit/e37b6ba))
 
 ### [9.5.2](https://github.com/maxogden/menubar/compare/v9.5.1...v9.5.2) (2025-10-10)
 

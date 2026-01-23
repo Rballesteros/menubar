@@ -1,19 +1,15 @@
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/max-mapper/menubar/test.yml)
-[![npm (scoped)](https://img.shields.io/npm/v/menubar.svg)](https://www.npmjs.com/package/menubar)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/max-mapper/menubar)
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/menubar.svg)
-![npm bundle size](https://img.shields.io/bundlephobia/min/menubar.svg)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Rballesteros/menubar-enhanced/test.yml)
+[![npm (scoped)](https://img.shields.io/npm/v/menubar-enhanced.svg)](https://www.npmjs.com/package/menubar-enhanced)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Rballesteros/menubar-enhanced)
 
 <br /><br /><br />
 
-<h1 align="center">➖ Menubar</h1>
+<h1 align="center">➖ Menubar Enhanced</h1>
 <h4 align="center">High level way to create menubar desktop applications with Electron.</h4>
 
-<br />
+> **Note:** This is a maintained fork of the original [menubar](https://github.com/maxogden/menubar) package with critical bug fixes and updated Electron support (v39+). Original package by Max Ogden.
 
-> **Enhanced Fork**: This fork adds support for Electron 39.x while maintaining compatibility with Electron 9.x and above. Original project by [Max Ogden](https://github.com/maxogden/menubar).
-
-<br /><br />
+<br /><br /><br />
 
 This module provides boilerplate for setting up a menubar application using Electron. All you have to do is point it at your `index.html` and `menubar` will handle the rest.
 
@@ -30,7 +26,7 @@ This module provides boilerplate for setting up a menubar application using Elec
 ## Installation
 
 ```bash
-yarn add menubar
+yarn add menubar-enhanced
 ```
 
 ## Usage
@@ -38,7 +34,7 @@ yarn add menubar
 Starting with your own new project, run these commands:
 
 ```bash
-$ yarn add menubar
+$ yarn add menubar-enhanced
 $ touch myApp.js
 $ touch index.html
 ```
@@ -46,7 +42,7 @@ $ touch index.html
 Fill `index.html` with some HTML, and `myApp.js` like this:
 
 ```javascript
-const { menubar } = require('menubar');
+const { menubar } = require('menubar-enhanced');
 
 const mb = menubar();
 
@@ -118,11 +114,41 @@ The `Menubar` class is an event emitter:
 - `after-close` - after the `.window` (BrowserWindow) property has been deleted
 - `focus-lost` - emitted if always-on-top option is set and the user clicks away
 
+## What's New in This Fork
+
+This enhanced fork includes critical bug fixes and modernized dependencies:
+
+### Bug Fixes
+
+| Issue | Problem | Fix |
+|-------|---------|-----|
+| **Timer cleanup** | `clearInterval()` was used instead of `clearTimeout()` for blur timeout | Corrected to use `clearTimeout()` |
+| **State reset** | State variables (`_isVisible`, `_positioner`, `_blurTimeout`) not properly reset on window close | All state now resets correctly in `windowClear()` and `clicked()` methods |
+| **Race condition** | Multiple blur events could create orphaned timeouts causing memory leaks | Blur timeout is now cleared before creating a new one |
+
+These fixes eliminate crashes, memory leaks, and inconsistent behavior when rapidly showing/hiding the menubar window.
+
+### Dependency Updates
+
+| Package | Original | Enhanced |
+|---------|----------|----------|
+| Electron (peer) | `<35.0.0` | `<41.0.0` |
+| Electron (dev) | 34 | 39 |
+| TypeScript | 4.6 | 5.9 |
+| Jest | 26 | 30 |
+| Biome | 1.9 | 2.3 |
+
+### Other Improvements
+
+- Added `prepare` script for automatic builds on install
+- Modernized imports to use `node:` protocol
+- Improved type annotations
+
 ## Compatibility with Electron
 
-| menubar  | Electron                   | Notes                                                                                                                      |
-| -------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| 9.x.x    | >= 9.x.x <= 39.x.x |                                                                                                                            |
+| menubar-enhanced | Electron                   | Notes                                                                                                                      |
+| ---------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| 9.x.x            | >= 9.x.x <= 39.x.x | Enhanced fork with bug fixes and Electron 39 support                                                                      |
 | 8.x.x    | 8.x.xx                      |                                                                                                                            |
 | 7.x.x    | 7.x.xx                      |                                                                                                                            |
 | 6.x.x    | >= 4.x.x < 7.x.x   | Not recommended for [security reasons](https://electronjs.org/docs/tutorial/security#17-use-a-current-version-of-electron) |
@@ -139,16 +165,3 @@ See the reference [API docs](./docs/globals.md).
 - To restore focus of previous window after menubar hide, use `mb.on('after-hide', () => { mb.app.hide() } )` or similar
 - To create a native menu, you can use `tray.setContextMenu(contextMenu)`, and pass this custom tray to menubar: `const mb = menubar({ tray });`. See [this example](https://github.com/maxogden/menubar/tree/master/examples/native-menu) for more information.
 - To avoid a flash when opening your menubar app, you can disable backgrounding the app using the following: `mb.app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true');`
-
-## Credits
-
-**Original Project**: Created by [Max Ogden](https://github.com/maxogden)
-- Original repository: [maxogden/menubar](https://github.com/maxogden/menubar)
-
-**Enhanced Fork**: Maintained by [Rballesteros](https://github.com/Rballesteros)
-- This fork adds Electron 39.x support and ongoing maintenance
-- Support this fork: [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/r898283)
-
-## License
-
-BSD-2-Clause - See [LICENSE](LICENSE) file for details
