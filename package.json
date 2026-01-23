@@ -1,16 +1,16 @@
 {
-  "name": "menubar",
+  "name": "menubar-enhanced",
   "version": "9.5.3",
-  "author": "Max Ogden",
+  "author": "Rodolfo Ballesteros",
   "bugs": {
-    "url": "https://github.com/Rballesteros/menubar/issues"
+    "url": "https://github.com/Rballesteros/menubar-enhanced/issues"
   },
-  "description": "high level way to create menubar desktop applications with electron (fork with Electron 39 support)",
+  "description": "high level way to create menubar desktop applications with electron",
   "files": [
     "/assets",
     "/lib"
   ],
-  "homepage": "https://github.com/Rballesteros/menubar",
+  "homepage": "https://github.com/Rballesteros/menubar-enhanced",
   "keywords": [
     "electron",
     "shell",
@@ -31,15 +31,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rballesteros/menubar.git"
+    "url": "https://github.com/Rballesteros/menubar-enhanced.git"
   },
   "scripts": {
     "build": "rimraf lib/ && tsc",
-    "prepare": "npm run build",
     "deploy": "yarn build && standard-version",
     "docs": "typedoc",
     "lint:check": "biome check",
     "lint": "biome check --fix",
+    "prepare": "yarn build",
     "test": "jest"
   },
   "types": "lib/index.d.ts",
@@ -47,20 +47,20 @@
     "electron-positioner": "^4.1.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.3",
-    "@types/jest": "^25.2.3",
-    "electron": "^39.2.6",
-    "jest": "^26.0.1",
+    "@biomejs/biome": "^2.3.11",
+    "@types/jest": "^30.0.0",
+    "electron": "^39.2.7",
+    "jest": "^30.2.0",
     "rimraf": "^3.0.2",
-    "standard-version": "^9.5.0",
-    "ts-jest": "^26.0.0",
-    "typedoc": "^0.28.15",
-    "typedoc-plugin-markdown": "^4.9.0",
-    "typedoc-plugin-no-inherit": "^1.6.1",
-    "typescript": "^4.6.2"
+    "standard-version": "^8.0.0",
+    "ts-jest": "^29.4.6",
+    "typedoc": "^0.17.7",
+    "typedoc-plugin-markdown": "^2.2.17",
+    "typedoc-plugin-no-inherit": "^1.1.10",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "electron": ">=9.0.0 <40.0.0"
+    "electron": ">=9.0.0 <41.0.0"
   },
   "packageManager": "yarn@1.22.22"
 }

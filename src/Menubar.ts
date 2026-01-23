@@ -1,6 +1,6 @@
-import { EventEmitter } from 'events';
-import fs from 'fs';
-import path from 'path';
+import { EventEmitter } from 'node:events';
+import fs from 'node:fs';
+import path from 'node:path';
 import { BrowserWindow, Tray } from 'electron';
 import Positioner from 'electron-positioner';
 
@@ -148,21 +148,22 @@ export class Menubar extends EventEmitter {
 
     this.emit('show');
 
-    if (trayPos && trayPos.x !== 0) {
+    let bounds = trayPos;
+    if (bounds && bounds.x !== 0) {
       // Cache the bounds
-      this._cachedBounds = trayPos;
+      this._cachedBounds = bounds;
     } else if (this._cachedBounds) {
       // Cached value will be used if showWindow is called without bounds data
-      trayPos = this._cachedBounds;
+      bounds = this._cachedBounds;
     } else if (this.tray.getBounds) {
       // Get the current tray bounds
-      trayPos = this.tray.getBounds();
+      bounds = this.tray.getBounds();
     }
 
     // Default the window to the right if `trayPos` bounds are undefined or null.
-    let noBoundsPosition = undefined;
+    let noBoundsPosition: string | undefined;
     if (
-      (trayPos === undefined || trayPos.x === 0) &&
+      (bounds === undefined || bounds.x === 0) &&
       this._options.windowPosition &&
       this._options.windowPosition.startsWith('tray')
     ) {
@@ -172,7 +173,7 @@ export class Menubar extends EventEmitter {
 
     const position = this.positioner.calculate(
       this._options.windowPosition || noBoundsPosition,
-      trayPos,
+      bounds,
     ) as { x: number; y: number };
 
     // Not using `||` because x and y can be zero.
@@ -256,7 +257,8 @@ export class Menubar extends EventEmitter {
 
     // if blur was invoked clear timeout
     if (this._blurTimeout) {
-      clearInterval(this._blurTimeout);
+      clearTimeout(this._blurTimeout);
+      this._blurTimeout = null;
     }
 
     if (this._browserWindow && this._isVisible) {
@@ -290,11 +292,17 @@ export class Menubar extends EventEmitter {
       }
 
       // hack to close if icon clicked when open
-      this._browserWindow.isAlwaysOnTop()
-        ? this.emit('focus-lost')
-        : (this._blurTimeout = setTimeout(() => {
-            this.hideWindow();
-          }, 100));
+      if (this._browserWindow.isAlwaysOnTop()) {
+        this.emit('focus-lost');
+      } else {
+        // Clear any existing timeout before setting a new one
+        if (this._blurTimeout) {
+          clearTimeout(this._blurTimeout);
+        }
+        this._blurTimeout = setTimeout(() => {
+          this.hideWindow();
+        }, 100);
+      }
     });
 
     if (this._options.showOnAllWorkspaces !== false) {
@@ -321,6 +329,12 @@ export class Menubar extends EventEmitter {
 
   private windowClear(): void {
     this._browserWindow = undefined;
+    this._positioner = undefined;
+    this._isVisible = false;
+    if (this._blurTimeout) {
+      clearTimeout(this._blurTimeout);
+      this._blurTimeout = null;
+    }
     this.emit('after-close');
   }
 }
