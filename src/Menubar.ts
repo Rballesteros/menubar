@@ -172,7 +172,7 @@ export class Menubar extends EventEmitter {
     }
 
     const position = this.positioner.calculate(
-      this._options.windowPosition || noBoundsPosition,
+      noBoundsPosition || this._options.windowPosition,
       bounds,
     ) as { x: number; y: number };
 
@@ -319,10 +319,14 @@ export class Menubar extends EventEmitter {
     // If the user explicity set options.index to false, we don't loadURL
     // https://github.com/maxogden/menubar/issues/255
     if (this._options.index !== false) {
-      await this._browserWindow.loadURL(
-        this._options.index,
-        this._options.loadUrlOptions,
-      );
+      try {
+        await this._browserWindow.loadURL(
+          this._options.index,
+          this._options.loadUrlOptions,
+        );
+      } catch (error) {
+        console.error('menubar: Failed to load index file', error);
+      }
     }
     this.emit('after-create-window');
   }
